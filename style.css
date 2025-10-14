@@ -1,0 +1,404 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f0f0f0;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+.form-container, .history-container {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: #218838;
+}
+
+#paymentHistory {
+  margin-top: 15px;
+}
+.backup-restore-buttons {
+  margin-top: 15px;
+}
+
+.backup-restore-buttons button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  font-weight: bold;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+table th {
+  background-color: #3f51b5;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table tr:hover {
+  background-color: #d0e4f5;
+  cursor: pointer;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+.form-container,
+.history-container {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-container label,
+.history-container label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.form-container input,
+.form-container select,
+.history-container select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-group {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1 1 100px;
+  padding: 10px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-group button:hover {
+  background-color: #45a049;
+}
+
+/* TABLE STYLING */
+.colorful-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.colorful-table th,
+.colorful-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.colorful-table th {
+  background-color: #3f51b5;
+  color: white;
+}
+
+/* ✅ Responsive Design for Mobile */
+@media (max-width: 600px) {
+  .form-container,
+  .history-container {
+    padding: 10px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+  h1, h2 {
+    font-size: 20px;
+  }
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f0f4f8;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 32px;
+}
+
+.form-container {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: bold;
+  color: #34495e;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 2px solid #d1d1d1;
+  border-radius: 6px;
+  outline: none;
+  font-weight: bold;
+  color: #2c3e50;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #2980b9;
+  background-color: #ffffff;
+  box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+}
+
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1 1 100px;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #2980b9;
+  color: white;
+  transition: background 0.3s;
+}
+
+.button-group button:hover {
+  background: #1f6391;
+}
+
+hr {
+  margin: 40px 0;
+}
+
+.history-container {
+  max-width: 900px;
+  margin: auto;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.colorful-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.colorful-table th,
+.colorful-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.colorful-table th {
+  background: #3498db;
+  color: white;
+}
+
+.colorful-table tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+.colorful-table tr:hover {
+  background: #d6eaf8;
+}
+/* Style for the history section */
+.history-container {
+  background: #f9f9ff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #d0d0f0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Dropdown styling */
+#historyStudent {
+  font-weight: bold;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #5c6bc0;
+  border-radius: 5px;
+  background-color: #e8eaf6;
+  color: #1a237e;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+#historyStudent:hover,
+#historyStudent:focus {
+  background-color: #c5cae9;
+  border-color: #3f51b5;
+  outline: none;
+}
+
+/* Style the PDF download button */
+.history-container button {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top: 10px;
+}
+
+.history-container button:hover {
+  background-color: #388e3c;
+}
+
+/* Optional: Add some spacing and styles for the table inside paymentHistory */
+#paymentHistory table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 15px;
+}
+
+#paymentHistory th, #paymentHistory td {
+  padding: 10px;
+  text-align: left;
+}
+
+#paymentHistory th {
+  background-color: #3f51b5;
+  color: white;
+  font-weight: bold;
+}
+
+#paymentHistory tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#paymentHistory tr:hover {
+  background-color: #e0e0f8;
+}
+@media (max-width: 600px) {
+  .button-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .button-group button {
+    width: auto;
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .backup-restore-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .backup-restore-buttons button {
+    width: auto;
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+

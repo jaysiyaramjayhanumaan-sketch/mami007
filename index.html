@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Payment Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Load jsPDF and autoTable from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <h1>Student Payment Manager</h1>
+
+  <div class="form-container">
+    <label for="studentName">Student Name:</label>
+    <select id="studentName">
+      <option value="">-- Select Student --</option>
+    </select>
+
+    <label for="mobileNumber">Mobile Number:</label>
+    <select id="mobileNumber">
+      <option value="">-- Select Mobile --</option>
+    </select>
+
+    <label for="seatNumber">Seat Number:</label>
+    <input type="text" id="seatNumber" placeholder="Enter Seat Number">
+
+    <label for="admissionDate">Admission Date:</label>
+    <input type="date" id="admissionDate" placeholder="Admission Date">
+
+    <label for="month">Month:</label>
+    <input id="month" type="number" min="1" max="12" step="1" placeholder="Enter no. of months paid">
+
+    <label for="dueDate">Due Date:</label>
+    <input type="date" id="dueDate">
+
+    <label for="fees">Fees:</label>
+    <input type="number" id="fees" placeholder="Fees">
+
+    <label for="paymentDate">Payment Date:</label>
+    <input type="date" id="paymentDate">
+
+    <label for="mode">Payment Mode:</label>
+    <select id="mode">
+  <option value="">-- Select Mode --</option>
+  <option value="Online">Online</option>
+  <option value="Cash">Cash</option>
+  <option value="Both">Both</option>
+</select>
+
+
+    <label for="remark">Remark:</label>
+    <input type="text" id="remark" placeholder="Enter Remark">
+
+    <div class="button-group">
+  <button onclick="savePayment()">Save</button>
+  <button onclick="editPayment()">Edit</button>
+  <button onclick="deletePayment()">Delete</button>
+  <button onclick="cancelForm()">Cancel</button>
+  <button onclick="backupData()">🔄 Backup</button>
+  <button onclick="restoreData()">♻️ Restore</button>
+</div>
+
+<!-- 👇 Add this after button group 👇 -->
+<div id="shareOptions" style="display: none; margin-top: 10px;">
+  <button onclick="sendWhatsApp()">📲 Send WhatsApp</button>
+  <button onclick="sendSMS()">✉️ Send SMS</button>
+  <button onclick="hideShareButtons()">❌ Cancel</button>
+</div>
+
+  </div>
+
+  <hr>
+
+  <div class="history-container">
+    <h2>View Payment History</h2>
+    <label for="historyStudent">Select Student:</label>
+    <select id="historyStudent" onchange="showHistory()">
+      <option value="">-- Select Student --</option>
+    </select>
+    <div id="paymentHistory"></div>
+    <button onclick="downloadPDF()">📄 Download</button>
+    <button onclick="downloadAllPaymentsPDF()">📄 Download All</button>
+  </div>
+
+  <!-- All JavaScript here -->
+  <script>
+let lastSavedMobile = "";
+let lastGeneratedMessage = "";
+
+    window.addEventListener("DOMContentLoaded", async function () {
+      const students = [
+         { name: "Paras Nayak", mobile: "9109474221" },
+  { name: "Supriya Singh", mobile: "8882383925" },
+  { name: "Khushboo Kushwaha", mobile: "9243142882" },
+  { name: "Pradeep Yadav", mobile: "6265023322" },
+  { name: "Anshuman Patel", mobile: "9243994181" },
+  { name: "Mragendra Patel", mobile: "6261324663" },
+  { name: "Vaishanavi Mehra", mobile: "7725848220" },
+  { name: "Sanjay Mirotha", mobile: "" },
+  { name: "Anand Thakur", mobile: "7047408289" },
+  { name: "Ajay Baraskar", mobile: "9174870614" },
+  { name: "Prateek Kant", mobile: "7770968933" },
+  { name: "Vidhi Patel", mobile: "9329382695" },
+  { name: "Raj Kalosiya", mobile: "9109598404" },
+  { name: "Priya Suryavanshi", mobile: "9165132297" },
+  { name: "Aapka Manan", mobile: "9669727432" },
+  { name: "Raj Kumar Meena", mobile: "8085657884" },
+  { name: "Jayesh Dhakad", mobile: "7045706142" },
+  { name: "HarshWardhan", mobile: "8287722711" },
+  { name: "Anvita Chouhan", mobile: "7987630835" },
+  { name: "Diva Chouhan", mobile: "9522400701" },
+  { name: "Rajdeep", mobile: "7770996528" },
+  { name: "Vipin Patel", mobile: "9753653302" },
+  { name: "Abhishek Sharma", mobile: "8770062508" },
+  { name: "Jayprakash Yadav", mobile: "8839462926" },
+  { name: "Govind", mobile: "7909448937" },
+  { name: "Ayush Pandey", mobile: "8878050539" },
+  { name: "Sonu Jatav", mobile: "8103128342" },
+  { name: "Rishu Gupta", mobile: "7000332823" },
+  { name: "Nitesh Ahirwar", mobile: "7489624124" },
+  { name: "Shalini Singroli", mobile: "6232124825" },
+  { name: "AdityaMehra", mobile: "9340373010" },
+  { name: "Aryan Soni", mobile: "8871522818" },
+  { name: "Himanshu Sen", mobile: "9893348965" },
+  { name: "Ravi Patidar", mobile: "8964006763" },
+  { name: "Diva Chouhan", mobile: "9522400701" },
+  { name: "Rajdeep", mobile: "7770996528" },
+  { name: "Vipin Patel", mobile: "9753653302" },
+  { name: "Abhishek Sharma", mobile: "8770062508" },
+  { name: "Jayprakash Yadav", mobile: "8839462926" },
+  { name: "Govind", mobile: "7909448937" },
+  { name: "Ayush Pandey", mobile: "8878050539" },
+  { name: "Sonu Jatav", mobile: "8103128342" },
+  { name: "Rishu Gupta", mobile: "7000332823" },
+  { name: "Nitesh Ahirwar", mobile: "7489624124" },
+  { name: "Shalini Singroli", mobile: "6232124825" },
+  { name: "AdityaMehra", mobile: "9340373010" },
+  { name: "Divya", mobile: "96260497674" },
+  { name: "Priyanka Chouhan", mobile: "9179452283" },
+  { name: "Krishna Patel", mobile: "8269749288" },
+  { name: "Riya Rahangdale", mobile: "7999426292" },
+  { name: "Mahendra Singh Chouhan", mobile: "7970130730" },
+  { name: "Ayushi Jain", mobile: "7223832978" },
+  { name: "Khusal Rajurkar", mobile: "7049999632" },
+  { name: "Harsh", mobile: "6263346265" },
+  { name: "Ravi Singh", mobile: "6269087903" }
+      ];
+
+      const studentSelect = document.getElementById("studentName");
+      const mobileSelect = document.getElementById("mobileNumber");
+      const historySelect = document.getElementById("historyStudent");
+
+      students.forEach(s => {
+        let option1 = document.createElement("option");
+        option1.value = s.name;
+        option1.text = s.name;
+        studentSelect.add(option1);
+
+        let option2 = document.createElement("option");
+        option2.value = s.mobile;
+        option2.text = s.mobile;
+        mobileSelect.add(option2);
+
+        let option3 = document.createElement("option");
+        option3.value = s.name;
+        option3.text = s.name;
+        historySelect.add(option3);
+      });
+
+      studentSelect.addEventListener("change", () => {
+        const selectedName = studentSelect.value;
+        const student = students.find(s => s.name === selectedName);
+        if (student && student.mobile) {
+          mobileSelect.value = student.mobile;
+        }
+      });
+
+      const { jsPDF } = window.jspdf;
+      window.jsPDFGlobal = jsPDF;
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("admissionDate").addEventListener("change", calculateDueDate);
+      document.getElementById("month").addEventListener("change", calculateDueDate);
+    });
+
+    let selectedStudent = null;
+    let selectedPaymentIndex = null;
+
+    function calculateDueDate() {
+      const admissionDateStr = document.getElementById("admissionDate").value;
+      const admissionMonth = parseInt(document.getElementById("month").value);
+      if (!admissionDateStr || isNaN(admissionMonth)) return;
+      const admissionDate = new Date(admissionDateStr);
+      admissionDate.setMonth(admissionDate.getMonth() + admissionMonth);
+      const year = admissionDate.getFullYear();
+      const month = (admissionDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = admissionDate.getDate().toString().padStart(2, '0');
+      document.getElementById("dueDate").value = `${year}-${month}-${day}`;
+    }
+function generateMessage(name, mobile, fees, months, paymentDate, admissionDate, dueDate, mode, remark) {
+  return `📚 Wisdom Library
+
+Hello ${name},
+
+Your payment of ₹${fees} for ${months} month(s) has been received on ${paymentDate}.
+Period: ${admissionDate} to ${dueDate}
+Mode of Payment: ${mode}
+Remark: ${remark}
+
+Thank you! 🙏`;
+}
+
+
+
+function sendWhatsApp() {
+  if (!lastSavedMobile || !lastGeneratedMessage) {
+    alert("Mobile number or message not found!");
+    return;
+  }
+
+  const mobile = lastSavedMobile.replace(/\D/g, '');
+  const message = encodeURIComponent(lastGeneratedMessage);
+  const url = `https://wa.me/91${mobile}?text=${message}`;
+  window.open(url, "_blank");
+}
+
+
+
+
+function sendSMS() {
+  if (!lastSavedMobile || !lastGeneratedMessage) {
+    alert("Mobile number or message not found!");
+    return;
+  }
+
+  const mobile = lastSavedMobile.replace(/\D/g, '');
+  const message = encodeURIComponent(lastGeneratedMessage);
+  const smsUrl = `sms:+91${mobile}?body=${message}`;
+  window.open(smsUrl, "_blank");
+}
+
+
+function showShareButtons() {
+  document.getElementById("shareOptions").style.display = "block";
+}
+
+function hideShareButtons() {
+  document.getElementById("shareOptions").style.display = "none";
+}
+
+
+   function savePayment() {
+  const studentName = document.getElementById("studentName").value;
+  const mobileNumber = document.getElementById("mobileNumber").value;
+  const seatNumber = document.getElementById("seatNumber").value;
+  const admissionDate = document.getElementById("admissionDate").value;
+  const admissionMonth = document.getElementById("month").value;
+  const dueDate = document.getElementById("dueDate").value;
+  const fees = document.getElementById("fees").value;
+  const paymentDate = document.getElementById("paymentDate").value;
+  const mode = document.getElementById("mode").value;
+  const remark = document.getElementById("remark").value;
+
+  if (!studentName || !paymentDate) {
+    alert("Student name and payment date are required.");
+    return;
+  }
+
+  const payment = {
+    seatNumber, mobileNumber, admissionDate, admissionMonth,
+    dueDate, fees, paymentDate, mode, remark
+  };
+
+  let allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+  if (!allPayments[studentName]) {
+    allPayments[studentName] = [];
+  }
+  allPayments[studentName].push(payment);
+  localStorage.setItem("payments", JSON.stringify(allPayments));
+
+  // ✅ Save mobile and message before clearing form
+  lastSavedMobile = mobileNumber;
+  lastGeneratedMessage = generateMessage(
+  studentName,
+  mobileNumber,
+  fees,
+  admissionMonth,
+  formatDate(paymentDate),
+  formatDate(admissionDate),
+  formatDate(dueDate),
+  mode,
+  remark
+);
+
+
+  // ✅ Show share buttons
+  showShareButtons();
+
+  // ✅ Clear form
+  document.querySelectorAll(".form-container input, .form-container select").forEach(el => el.value = "");
+
+  alert("Payment saved successfully!");
+}
+
+
+    function populateForm(payment) {
+      document.getElementById("studentName").value = selectedStudent;
+      document.getElementById("mobileNumber").value = payment.mobileNumber;
+      document.getElementById("seatNumber").value = payment.seatNumber;
+      document.getElementById("admissionDate").value = payment.admissionDate;
+      document.getElementById("month").value = payment.admissionMonth;
+      document.getElementById("dueDate").value = payment.dueDate;
+      document.getElementById("fees").value = payment.fees;
+      document.getElementById("paymentDate").value = payment.paymentDate;
+      document.getElementById("mode").value = payment.mode;
+      document.getElementById("remark").value = payment.remark;
+    }
+
+    function editPayment() {
+      if (selectedStudent === null || selectedPaymentIndex === null) {
+        alert("Select a payment from history to edit.");
+        return;
+      }
+
+      const updatedPayment = {
+        seatNumber: document.getElementById("seatNumber").value,
+        mobileNumber: document.getElementById("mobileNumber").value,
+        admissionDate: document.getElementById("admissionDate").value,
+        admissionMonth: document.getElementById("month").value,
+        dueDate: document.getElementById("dueDate").value,
+        fees: document.getElementById("fees").value,
+        paymentDate: document.getElementById("paymentDate").value,
+        mode: document.getElementById("mode").value,
+        remark: document.getElementById("remark").value
+      };
+
+      let allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+      allPayments[selectedStudent][selectedPaymentIndex] = updatedPayment;
+      localStorage.setItem("payments", JSON.stringify(allPayments));
+
+      alert("Payment updated successfully!");
+      cancelForm();
+      showHistory();
+    }
+
+    function deletePayment() {
+      if (selectedStudent === null || selectedPaymentIndex === null) {
+        alert("Select a payment from history to delete.");
+        return;
+      }
+
+      if (!confirm("Are you sure you want to delete this payment?")) return;
+
+      let allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+      allPayments[selectedStudent].splice(selectedPaymentIndex, 1);
+      localStorage.setItem("payments", JSON.stringify(allPayments));
+
+      alert("Payment deleted.");
+      cancelForm();
+      showHistory();
+    }
+
+    function cancelForm() {
+      selectedStudent = null;
+      selectedPaymentIndex = null;
+      document.querySelectorAll(".form-container input, .form-container select").forEach(el => el.value = "");
+    }
+
+    function showHistory() {
+      const studentName = document.getElementById("historyStudent").value;
+      const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+      const history = allPayments[studentName] || [];
+
+      const container = document.getElementById("paymentHistory");
+      container.innerHTML = "";
+
+      if (history.length === 0) {
+        container.innerHTML = "<p>No payment history available.</p>";
+        return;
+      }
+
+      const table = document.createElement("table");
+table.classList.add("colorful-table"); // optional, if you want more control
+
+      table.border = "1";
+      table.style.width = "100%";
+
+      let header = table.insertRow();
+      ["Seat No", "Mobile", "Admission Date", "Month", "Due Date",
+        "Fees", "Payment Date", "Mode", "Remark"].forEach(h => {
+          let th = document.createElement("th");
+          th.innerText = h;
+          header.appendChild(th);
+        });
+
+      history.forEach((p, index) => {
+        let row = table.insertRow();
+        row.onclick = () => {
+          selectedStudent = studentName;
+          selectedPaymentIndex = index;
+          populateForm(p);
+        };
+
+        row.insertCell().innerText = p.seatNumber;
+        row.insertCell().innerText = p.mobileNumber;
+        row.insertCell().innerText = formatDate(p.admissionDate);
+        row.insertCell().innerText = p.admissionMonth;
+        row.insertCell().innerText = formatDate(p.dueDate);
+        row.insertCell().innerText = p.fees;
+        row.insertCell().innerText = formatDate(p.paymentDate);
+        row.insertCell().innerText = p.mode;
+        row.insertCell().innerText = p.remark;
+      });
+
+      container.appendChild(table);
+    }
+
+    function formatMonth(monthNumber) {
+      if (!monthNumber) return "";
+      const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+      const index = parseInt(monthNumber) - 1;
+      return months[index] || "";
+    }
+
+    function formatDate(dateStr) {
+  if (!dateStr) return "-";
+  const date = new Date(dateStr);
+  if (isNaN(date)) return "-";
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear().toString().slice(2); // last 2 digits
+
+  return `${day}-${month}-${year}`;
+}
+
+
+    function downloadPDF() {
+      const studentName = document.getElementById("historyStudent").value;
+      const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+      const history = allPayments[studentName] || [];
+
+      if (history.length === 0) {
+        alert("No data to download.");
+        return;
+      }
+
+      const jsPDF = window.jsPDFGlobal;
+      if (!jsPDF) {
+        alert("PDF generator not ready yet.");
+        return;
+      }
+
+     const doc = new jsPDF({
+  orientation: "landscape",
+  unit: "mm",
+  format: "a4"
+});
+
+      doc.setFontSize(16);
+      doc.setTextColor(40, 40, 40);
+      doc.text(`Payment History - ${studentName}`, 14, 15);
+
+      const rows = history.map(p => [
+        p.seatNumber || "-",
+        p.mobileNumber || "-",
+        formatDate(p.admissionDate),
+        p.admissionMonth,
+        formatDate(p.dueDate),
+        p.fees || "-",
+        formatDate(p.paymentDate),
+        p.mode || "-",
+        p.remark || "-"
+      ]);
+
+      doc.autoTable({
+  head: [["Seat No", "Mobile", "Admission Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
+  body: rows,
+  startY: 20,
+  theme: 'grid',
+  headStyles: {
+    fillColor: [63, 81, 181],  // Dark blue
+    textColor: [255, 255, 255], // White text
+    fontStyle: 'bold',          // Bold header font
+    fontSize: 12                // Larger font size for header
+  },
+  styles: {
+    fontSize: 10,               // Slightly bigger font for body
+    cellPadding: 4,
+    fontStyle: 'bold',          // Make body font bold
+    textColor: [30, 30, 30]     // Dark text color for better visibility
+  },
+  alternateRowStyles: {
+    fillColor: [240, 240, 240]  // Light gray background on alternate rows for readability
+  },
+  columnStyles: {
+    8: { cellWidth: 60 }
+  }
+});
+
+
+      doc.save(`${studentName}_payment_history.pdf`);
+    }
+async function downloadAllPaymentsPDF() {
+  const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+  const studentNames = Object.keys(allPayments);
+
+  if (studentNames.length === 0) {
+    alert("No payment data available.");
+    return;
+  }
+
+  const jsPDF = window.jsPDFGlobal;
+  if (!jsPDF) {
+    alert("PDF generator not ready yet.");
+    return;
+  }
+
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4"
+  });
+
+  doc.setFontSize(16);
+  doc.setTextColor(40, 40, 40);
+
+  let currentY = 15;
+
+  for (const studentName of studentNames) {
+    const payments = allPayments[studentName];
+
+    if (!payments || payments.length === 0) continue;
+
+    // Student heading
+    doc.text(`Payment History - ${studentName}`, 14, currentY);
+
+    // Prepare data
+    const rows = payments.map(p => [
+      p.seatNumber || "-",
+      p.mobileNumber || "-",
+      formatDate(p.admissionDate),
+      p.admissionMonth,
+      formatDate(p.dueDate),
+      p.fees || "-",
+      formatDate(p.paymentDate),
+      p.mode || "-",
+      p.remark || "-"
+    ]);
+
+    // Table
+    doc.autoTable({
+      startY: currentY + 5,
+      head: [["Seat No", "Mobile", "Admission Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
+      body: rows,
+      theme: 'grid',
+      styles: {
+        fontSize: 10,
+        cellPadding: 4,
+        fontStyle: 'bold',
+        textColor: [30, 30, 30]
+      },
+      headStyles: {
+        fillColor: [63, 81, 181],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240]
+      },
+      columnStyles: {
+        8: { cellWidth: 60 }
+      },
+      didDrawPage: function (data) {
+        currentY = data.cursor.y + 10;
+
+        // If the next student won't fit, create a new page
+        if (currentY + 50 > doc.internal.pageSize.getHeight()) {
+          doc.addPage();
+          currentY = 15;
+        }
+      }
+    });
+  }
+
+  doc.save(`All_Students_Payment_History.pdf`);
+}
+
+async function backupData() {
+  try {
+    const allPayments = localStorage.getItem("payments");
+    if (!allPayments) {
+      alert("No data to backup.");
+      return;
+    }
+
+    const fileHandle = await window.showSaveFilePicker({
+      suggestedName: "student_payments_backup.json",
+      types: [{
+        description: "JSON File",
+        accept: { "application/json": [".json"] }
+      }]
+    });
+
+    const writable = await fileHandle.createWritable();
+    await writable.write(allPayments);
+    await writable.close();
+
+    alert("✅ Backup saved successfully!");
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      alert("❌ Failed to save file.");
+      console.error(err);
+    }
+  }
+}
+
+async function restoreData() {
+  try {
+    const [fileHandle] = await window.showOpenFilePicker({
+      types: [{
+        description: "JSON File",
+        accept: { "application/json": [".json"] }
+      }]
+    });
+
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    const json = JSON.parse(text);
+
+    if (confirm("Are you sure you want to restore this backup? This will overwrite current data.")) {
+      localStorage.setItem("payments", JSON.stringify(json));
+      alert("✅ Data restored successfully!");
+      showHistory(); // Refresh payment history if a student is selected
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      alert("❌ Failed to restore data.");
+      console.error(err);
+    }
+  }
+}
+function showShareButtons() {
+  document.getElementById("shareOptions").style.display = "block";
+}
+
+function hideShareButtons() {
+  document.getElementById("shareOptions").style.display = "none";
+}
+
+
+
+
+
+  </script>
+</body>
+</html>
