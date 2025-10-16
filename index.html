@@ -27,8 +27,8 @@
     <label for="seatNumber">Seat Number:</label>
     <input type="text" id="seatNumber" placeholder="Enter Seat Number">
 
-    <label for="admissionDate">Admission Date:</label>
-    <input type="date" id="admissionDate" placeholder="Admission Date">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" placeholder="Start Date">
 
     <label for="month">Month:</label>
     <input id="month" type="number" min="1" max="12" step="1" placeholder="Enter no. of months paid">
@@ -92,7 +92,8 @@ let lastGeneratedMessage = "";
 
     window.addEventListener("DOMContentLoaded", async function () {
       const students = [
-  { name: "Paras Nayak", mobile: "9109474221" },
+         { name: "Paras Nayak", mobile: "9109474221" },
+    { name: "Paras Nayak", mobile: "9109474221" },
   { name: "Supriya Singh", mobile: "8882383925" },
   { name: "Khushboo Kushwaha", mobile: "9243142882" },
   { name: "Pradeep Yadav", mobile: "6265023322" },
@@ -177,7 +178,7 @@ let lastGeneratedMessage = "";
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("admissionDate").addEventListener("change", calculateDueDate);
+      document.getElementById("startDate").addEventListener("change", calculateDueDate);
       document.getElementById("month").addEventListener("change", calculateDueDate);
     });
 
@@ -185,23 +186,23 @@ let lastGeneratedMessage = "";
     let selectedPaymentIndex = null;
 
     function calculateDueDate() {
-      const admissionDateStr = document.getElementById("admissionDate").value;
+      const startDateStr = document.getElementById("startDate").value;
       const admissionMonth = parseInt(document.getElementById("month").value);
-      if (!admissionDateStr || isNaN(admissionMonth)) return;
-      const admissionDate = new Date(admissionDateStr);
-      admissionDate.setMonth(admissionDate.getMonth() + admissionMonth);
-      const year = admissionDate.getFullYear();
-      const month = (admissionDate.getMonth() + 1).toString().padStart(2, '0');
-      const day = admissionDate.getDate().toString().padStart(2, '0');
+      if (!startDateStr || isNaN(admissionMonth)) return;
+      const startDate = new Date(startDateStr);
+      startDate.setMonth(startDate.getMonth() + admissionMonth);
+      const year = startDate.getFullYear();
+      const month = (startDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = startDate.getDate().toString().padStart(2, '0');
       document.getElementById("dueDate").value = `${year}-${month}-${day}`;
     }
-function generateMessage(name, mobile, fees, months, paymentDate, admissionDate, dueDate, mode, remark) {
+function generateMessage(name, mobile, fees, months, paymentDate, startDate, dueDate, mode, remark) {
   return `📚 Wisdom Library
 
 Hello ${name},
 
 Your payment of ₹${fees} for ${months} month(s) has been received on ${paymentDate}.
-Period: ${admissionDate} to ${dueDate}
+Period: ${startDate} to ${dueDate}
 Mode of Payment: ${mode}
 Remark: ${remark}
 
@@ -251,7 +252,7 @@ function hideShareButtons() {
   const studentName = document.getElementById("studentName").value;
   const mobileNumber = document.getElementById("mobileNumber").value;
   const seatNumber = document.getElementById("seatNumber").value;
-  const admissionDate = document.getElementById("admissionDate").value;
+  const startDate = document.getElementById("startDate").value;
   const admissionMonth = document.getElementById("month").value;
   const dueDate = document.getElementById("dueDate").value;
   const fees = document.getElementById("fees").value;
@@ -265,7 +266,7 @@ function hideShareButtons() {
   }
 
   const payment = {
-    seatNumber, mobileNumber, admissionDate, admissionMonth,
+    seatNumber, mobileNumber, startDate, admissionMonth,
     dueDate, fees, paymentDate, mode, remark
   };
 
@@ -284,7 +285,7 @@ function hideShareButtons() {
   fees,
   admissionMonth,
   formatDate(paymentDate),
-  formatDate(admissionDate),
+  formatDate(startDate),
   formatDate(dueDate),
   mode,
   remark
@@ -305,7 +306,7 @@ function hideShareButtons() {
       document.getElementById("studentName").value = selectedStudent;
       document.getElementById("mobileNumber").value = payment.mobileNumber;
       document.getElementById("seatNumber").value = payment.seatNumber;
-      document.getElementById("admissionDate").value = payment.admissionDate;
+      document.getElementById("startDate").value = payment.startDate;
       document.getElementById("month").value = payment.admissionMonth;
       document.getElementById("dueDate").value = payment.dueDate;
       document.getElementById("fees").value = payment.fees;
@@ -323,7 +324,7 @@ function hideShareButtons() {
       const updatedPayment = {
         seatNumber: document.getElementById("seatNumber").value,
         mobileNumber: document.getElementById("mobileNumber").value,
-        admissionDate: document.getElementById("admissionDate").value,
+        startDate: document.getElementById("startDate").value,
         admissionMonth: document.getElementById("month").value,
         dueDate: document.getElementById("dueDate").value,
         fees: document.getElementById("fees").value,
@@ -384,7 +385,7 @@ table.classList.add("colorful-table"); // optional, if you want more control
       table.style.width = "100%";
 
       let header = table.insertRow();
-      ["Seat No", "Mobile", "Admission Date", "Month", "Due Date",
+      ["Seat No", "Mobile", "Start Date", "Month", "Due Date",
         "Fees", "Payment Date", "Mode", "Remark"].forEach(h => {
           let th = document.createElement("th");
           th.innerText = h;
@@ -401,7 +402,7 @@ table.classList.add("colorful-table"); // optional, if you want more control
 
         row.insertCell().innerText = p.seatNumber;
         row.insertCell().innerText = p.mobileNumber;
-        row.insertCell().innerText = formatDate(p.admissionDate);
+        row.insertCell().innerText = formatDate(p.startDate);
         row.insertCell().innerText = p.admissionMonth;
         row.insertCell().innerText = formatDate(p.dueDate);
         row.insertCell().innerText = p.fees;
@@ -467,7 +468,7 @@ table.classList.add("colorful-table"); // optional, if you want more control
       const rows = history.map(p => [
         p.seatNumber || "-",
         p.mobileNumber || "-",
-        formatDate(p.admissionDate),
+        formatDate(p.startDate),
         p.admissionMonth,
         formatDate(p.dueDate),
         p.fees || "-",
@@ -477,7 +478,7 @@ table.classList.add("colorful-table"); // optional, if you want more control
       ]);
 
       doc.autoTable({
-  head: [["Seat No", "Mobile", "Admission Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
+  head: [["Seat No", "Mobile", "Start Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
   body: rows,
   startY: 20,
   theme: 'grid',
@@ -542,7 +543,7 @@ async function downloadAllPaymentsPDF() {
     const rows = payments.map(p => [
       p.seatNumber || "-",
       p.mobileNumber || "-",
-      formatDate(p.admissionDate),
+      formatDate(p.startDate),
       p.admissionMonth,
       formatDate(p.dueDate),
       p.fees || "-",
@@ -554,7 +555,7 @@ async function downloadAllPaymentsPDF() {
     // Table
     doc.autoTable({
       startY: currentY + 5,
-      head: [["Seat No", "Mobile", "Admission Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
+      head: [["Seat No", "Mobile", "Start Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
       body: rows,
       theme: 'grid',
       styles: {
@@ -658,10 +659,3 @@ function hideShareButtons() {
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
