@@ -651,9 +651,46 @@ function showShareButtons() {
 function hideShareButtons() {
   document.getElementById("shareOptions").style.display = "none";
 }
+// Move focus to next input on Enter key (auto-click Save on last)
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    const focusableElements = Array.from(
+      document.querySelectorAll(
+        "input, select, textarea, button:not([disabled])"
+      )
+    ).filter(el => el.offsetParent !== null); // only visible ones
 
+    const index = focusableElements.indexOf(document.activeElement);
 
+    if (index > -1 && index < focusableElements.length - 1) {
+      e.preventDefault(); // stop form submit
+      focusableElements[index + 1].focus();
+    } else if (index === focusableElements.length - 1) {
+      e.preventDefault();
+      // Try clicking the save button if found
+      const saveBtn = document.querySelector("#saveButton, .save-btn, button[type='submit']");
+      if (saveBtn) {
+        saveBtn.click();
+      }
+    }
+  }
+});
+// 🗓️ Auto open calendar when Start Date or Payment Date gets focus
+document.addEventListener("DOMContentLoaded", function () {
+  const autoOpenDateInputs = ["editAdmissionDate", "editDueDate", "paymentDate", "startDate"];
 
+  autoOpenDateInputs.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener("focus", function () {
+        // थोड़ी delay इसलिए ताकि browser input को ready कर ले
+        setTimeout(() => {
+          this.showPicker?.(); // ✅ Modern browsers (Chrome, Edge)
+        }, 100);
+      });
+    }
+  });
+});
 
 
   </script>
