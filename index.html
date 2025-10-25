@@ -83,6 +83,12 @@
     <div id="paymentHistory"></div>
     <button onclick="downloadPDF()">📄 Download</button>
     <button onclick="downloadAllPaymentsPDF()">📄 Download All</button>
+    <!-- Your Download Button -->
+    <button onclick="openMonthPicker()">📅 Download Monthly Report</button>
+
+    <!-- Hidden Month Picker -->
+    <input type="month" id="monthPicker" style="display:none;" />
+
   </div>
 
   <!-- All JavaScript here -->
@@ -141,8 +147,6 @@ let lastGeneratedMessage = "";
   { name: "Somesh Dhakad", mobile: "9754138691" },
   { name: "Shriram Dhakad", mobile: "6260025818" },
   { name: "Pawan Pandit", mobile: "7089542287" },
-  { name: "Shriyanshu Sahu", mobile: "8982798576" },
-  { name: "Vikas Pawar", mobile: "6266955434" },
   { name: "Ashutosh Mishra", mobile: "8103572465" }
       ];
 
@@ -591,6 +595,170 @@ async function downloadAllPaymentsPDF() {
 
   doc.save(`All_Students_Payment_History.pdf`);
 }
+async function downloadMonthlyReport(month, year) {
+  const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
+  const jsPDF = window.jsPDFGlobal;
+  if (!jsPDF) {
+    alert("PDF generator not ready yet.");
+    return;
+  }
+
+  const doc = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4"
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const centerX = pageWidth / 2;
+
+  // 🌟 Fancy Centered Header Section
+  const title = "Wisdom Library";
+  const reportTitle = "Monthly Fees Report";
+  const monthYearText = `${getMonthName(month)} ${year}`;
+  const generatedDate = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
+
+  // 🎨 1️⃣ Main Title
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(0, 102, 204);
+  const titleWidth = doc.getTextWidth(title);
+  doc.text(title, centerX - titleWidth / 2, 20);
+  doc.setDrawColor(0, 102, 204);
+  doc.setLineWidth(1);
+  doc.line(centerX - titleWidth / 2, 22, centerX + titleWidth / 2, 22);
+
+  // 🧾 2️⃣ Report Title
+  doc.setFontSize(18);
+  doc.setTextColor(30, 30, 30);
+  const rptWidth = doc.getTextWidth(reportTitle);
+  doc.text(reportTitle, centerX - rptWidth / 2, 32);
+  doc.setDrawColor(30, 30, 30);
+  doc.line(centerX - rptWidth / 2, 34, centerX + rptWidth / 2, 34);
+
+  // 📅 3️⃣ Month & Year
+  doc.setFontSize(16);
+  doc.setTextColor(220, 20, 60);
+  doc.setFont("helvetica", "bold");
+  const myWidth = doc.getTextWidth(monthYearText);
+  doc.text(monthYearText, centerX - myWidth / 2, 44);
+  doc.setDrawColor(220, 20, 60);
+  doc.line(centerX - myWidth / 2, 46, centerX + myWidth / 2, 46);
+
+  // 🕓 Generated Date (bottom-right corner)
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "italic");
+  doc.setTextColor(100, 100, 100);
+  const genText = `Generated on: ${generatedDate}`;
+  const genWidth = doc.getTextWidth(genText);
+  const pageHeight = doc.internal.pageSize.getHeight();
+  doc.text(genText, pageWidth - genWidth - 14, pageHeight - 10);
+
+  // Reset for table
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(40, 40, 40);
+
+  // --------------------------
+  // Table Data Section
+  // --------------------------
+  const rows = [];
+  let total = 0;
+
+  for (const [studentName, payments] of Object.entries(allPayments)) {
+    for (const p of payments) {
+      if (!p.paymentDate) continue;
+      const date = new Date(p.paymentDate);
+      if (date.getMonth() + 1 === month && date.getFullYear() === year) {
+        rows.push([
+          studentName,
+          p.mobileNumber || "-",
+          formatDate(p.paymentDate),
+          p.fees || "0",
+          p.mode || "-",
+          p.remark || "-"
+        ]);
+        total += Number(p.fees) || 0;
+      }
+    }
+  }
+
+  if (rows.length === 0) {
+    alert(`No payments found for ${getMonthName(month)} ${year}`);
+    return;
+  }
+
+   // 📊 Table Section (bold + black text)
+  doc.autoTable({
+    startY: 55,
+    head: [["Student Name", "Mobile", "Payment Date", "Fees", "Mode", "Remark"]],
+    body: rows,
+    theme: "grid",
+    headStyles: {
+      fillColor: [0, 102, 204],
+      textColor: [255, 255, 255],
+      fontStyle: "bold"
+    },
+    bodyStyles: {
+      fontStyle: "bold",       // ✅ make data bold
+      textColor: [0, 0, 0],    // ✅ black text
+      fillColor: false,        // no background color
+    },
+    styles: { 
+      fontSize: 10,
+      cellPadding: 4,
+      lineColor: [180, 180, 180],
+      lineWidth: 0.2
+    }
+  });
+
+
+  // Add total at bottom
+  const finalY = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 100, 0);
+  doc.text(`Total Fees Received: ${total.toLocaleString()}`, 14, finalY);
+
+  doc.save(`Monthly_Report_${getMonthName(month)}_${year}.pdf`);
+}
+
+// Helper
+function getMonthName(month) {
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  return months[month - 1];
+}
+function openMonthPicker() {
+  const monthInput = document.getElementById("monthPicker");
+
+  // Reset & trigger the calendar
+  monthInput.value = "";
+  monthInput.style.display = "block";
+  monthInput.showPicker?.(); // open month picker directly (Chrome-supported)
+
+  // When user selects a month
+  monthInput.onchange = () => {
+    const selectedValue = monthInput.value; // format = "2025-09"
+    if (!selectedValue) return;
+
+    const [yearStr, monthStr] = selectedValue.split("-");
+    const month = parseInt(monthStr);
+    const year = parseInt(yearStr);
+
+    monthInput.style.display = "none"; // hide again
+    downloadMonthlyReport(month, year);
+  };
+}
+
+
+
 
 async function backupData() {
   try {
@@ -698,4 +866,3 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 </body>
 </html>
-
