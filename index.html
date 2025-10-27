@@ -659,11 +659,6 @@ async function downloadMonthlyReport(month, year) {
   const pageHeight = doc.internal.pageSize.getHeight();
   doc.text(genText, pageWidth - genWidth - 14, pageHeight - 10);
 
-  // Reset for table
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(40, 40, 40);
-
   // --------------------------
   // Table Data Section
   // --------------------------
@@ -679,6 +674,7 @@ async function downloadMonthlyReport(month, year) {
           studentName,
           p.mobileNumber || "-",
           formatDate(p.paymentDate),
+          p.admissionMonth || "-", // ✅ New column for Month
           p.fees || "0",
           p.mode || "-",
           p.remark || "-"
@@ -693,10 +689,10 @@ async function downloadMonthlyReport(month, year) {
     return;
   }
 
-   // 📊 Table Section (bold + black text)
+  // ✅ Table with "Month" column
   doc.autoTable({
     startY: 55,
-    head: [["Student Name", "Mobile", "Payment Date", "Fees", "Mode", "Remark"]],
+    head: [["Student Name", "Mobile", "Payment Date", "Month", "Fees", "Mode", "Remark"]],
     body: rows,
     theme: "grid",
     headStyles: {
@@ -705,20 +701,35 @@ async function downloadMonthlyReport(month, year) {
       fontStyle: "bold"
     },
     bodyStyles: {
-      fontStyle: "bold",       // ✅ make data bold
-      textColor: [0, 0, 0],    // ✅ black text
-      fillColor: false,        // no background color
+      fontStyle: "bold",
+      textColor: [0, 0, 0],
+      fillColor: false,
     },
-    styles: { 
+    styles: {
       fontSize: 10,
       cellPadding: 4,
       lineColor: [180, 180, 180],
       lineWidth: 0.2
+    },
+columnStyles: {
+  3: { halign: "center" } // 0=Student, 1=Mobile, 2=Payment Date, 3=Month
+},
+
+    didDrawPage: function (data) {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const pageWidth = doc.internal.pageSize.getWidth();
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "italic");
+      doc.setTextColor(100, 100, 100);
+
+      const genText = `Generated on: ${generatedDate}`;
+      const genWidth = doc.getTextWidth(genText);
+      doc.text(genText, pageWidth - genWidth - 14, pageHeight - 10);
     }
   });
 
-
-  // Add total at bottom
+  // ✅ Total at bottom
   const finalY = doc.lastAutoTable.finalY + 10;
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
@@ -727,6 +738,7 @@ async function downloadMonthlyReport(month, year) {
 
   doc.save(`Monthly_Report_${getMonthName(month)}_${year}.pdf`);
 }
+
 
 // Helper
 function getMonthName(month) {
@@ -867,4 +879,3 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 </body>
 </html>
-
