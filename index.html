@@ -208,9 +208,9 @@ function generateMessage(name, mobile, fees, months, paymentDate, startDate, due
 
 Hello ${name},
 
-Your payment of ₹${fees} for ${months} month(s) has been received on ${paymentDate}.
-Period: ${startDate} to ${dueDate}
-Mode of Payment: ${mode}
+Your payment of ₹${fees} for ${months} month(s) has been received on ${paymentDate}.✅
+📅 Period: ${startDate} to ${dueDate}
+💳Mode of Payment: ${mode}
 Remark: ${remark}
 
 Thank you! 🙏`;
@@ -510,8 +510,11 @@ table.classList.add("colorful-table"); // optional, if you want more control
 });
 
 
-      doc.save(`${studentName}_payment_history.pdf`);
-    }
+       // ✅ Instead of auto-saving, open PDF in new tab
+  const blob = doc.output("blob");
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank"); // User can use “Save As…”
+}
 async function downloadAllPaymentsPDF() {
   const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
   const studentNames = Object.keys(allPayments);
@@ -594,7 +597,10 @@ async function downloadAllPaymentsPDF() {
     });
   }
 
-  doc.save(`All_Students_Payment_History.pdf`);
+  // ✅ Open PDF in new tab for manual save
+  const blob = doc.output("blob");
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
 }
 async function downloadMonthlyReport(month, year) {
   const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
@@ -736,7 +742,10 @@ columnStyles: {
   doc.setTextColor(0, 100, 0);
   doc.text(`Total Fees Received: ${total.toLocaleString()}`, 14, finalY);
 
-  doc.save(`Monthly_Report_${getMonthName(month)}_${year}.pdf`);
+   // ✅ Open PDF in new tab
+  const blob = doc.output("blob");
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
 }
 
 
