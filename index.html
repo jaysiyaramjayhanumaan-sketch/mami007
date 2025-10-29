@@ -204,17 +204,18 @@ let lastGeneratedMessage = "";
       document.getElementById("dueDate").value = `${year}-${month}-${day}`;
     }
 function generateMessage(name, mobile, fees, months, paymentDate, startDate, dueDate, mode, remark) {
-  return `📚 Wisdom Library
+  return `📚 **WISDOM LIBRARY**
 
-Hello ${name},
+Hello **${name}** 👋
 
-Your payment of ₹${fees} for ${months} month(s) has been received on ${paymentDate}.✅
-📅 Period: ${startDate} to ${dueDate}
-💳Mode of Payment: ${mode}
-Remark: ${remark}
+We’re happy to inform you that **your payment of ₹${fees} for ${months} month(s) has been successfully received on ${paymentDate}.** ✅
 
-Thank you! 🙏`;
+🗓️ **Period:** ${startDate} → ${dueDate}  
+💳 **Mode of Payment:** ${mode}${remark ? `\n📝 **Remark:** ${remark}` : ''}
+
+🙏 Thank you for your **prompt payment and continued trust in Wisdom Library.**`;
 }
+
 
 
 
@@ -510,10 +511,12 @@ table.classList.add("colorful-table"); // optional, if you want more control
 });
 
 
-       // ✅ Instead of auto-saving, open PDF in new tab
+      // ✅ Trigger “Save As…” dialog
   const blob = doc.output("blob");
-  const url = URL.createObjectURL(blob);
-  window.open(url, "_blank"); // User can use “Save As…”
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${studentName}_payment_history.pdf`; // default filename
+  link.click();
 }
 async function downloadAllPaymentsPDF() {
   const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
