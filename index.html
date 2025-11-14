@@ -789,23 +789,25 @@ function openMonthPicker() {
 
 
 async function backupData() {
-  const backupSeats = seats.slice(0, 56);
-  const dataStr = JSON.stringify(backupSeats);
-  
-  // ✅ 1. Android WebView (if inside app)
+
+  // Save only payments
+  const payments = JSON.parse(localStorage.getItem("payments") || "[]");
+  const dataStr = JSON.stringify(payments, null, 2);
+
+  // 1. Android App (WebView)
   if (typeof AndroidBridge !== "undefined" && AndroidBridge.backup) {
     AndroidBridge.backup(dataStr);
     return;
   }
 
-  // ✅ 2. Modern Desktop Browser (show Save As dialog)
+  // 2. Desktop Browser (Save As dialog)
   if ('showSaveFilePicker' in window) {
     const options = {
       types: [{
         description: 'JSON Files',
         accept: { 'application/json': ['.json'] },
       }],
-      suggestedName: 'seat-backup.json'
+      suggestedName: 'payments-backup.json'
     };
 
     try {
@@ -816,28 +818,24 @@ async function backupData() {
       return;
     } catch (err) {
       console.error('File save cancelled or failed', err);
-      // fallback to download method below
     }
   }
 
-  // ✅ 3. Mobile browsers & older fallback (download .json file)
+  // 3. Mobile fallback download
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'seat-backup.json';
-
-  // Some mobile browsers (like Chrome on Android) auto-download to Downloads folder
-  // No full dialog, but user gets the file saved
+  a.download = 'payments-backup.json';
 
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
 
-  // Cleanup URL
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
 async function restoreData() {
   try {
     const [fileHandle] = await window.showOpenFilePicker({
