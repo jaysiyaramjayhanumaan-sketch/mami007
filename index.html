@@ -43,12 +43,36 @@
     <input type="date" id="paymentDate">
 
     <label for="mode">Payment Mode:</label>
-    <select id="mode">
+<select id="mode">
   <option value="">-- Select Mode --</option>
   <option value="Online">Online</option>
   <option value="Cash">Cash</option>
   <option value="Both">Both</option>
 </select>
+
+<!-- Account dropdown initially hidden -->
+<div id="accountDiv" style="display:none; margin-top:10px;">
+  <label for="account">Select Account:</label>
+  <select id="account">
+    <option value="">-- Select Account --</option>
+    <option value="Arvind Choubey">Arvind Choubey</option>
+    <option value="Archana Choubey">Archana Choubey</option>
+    <option value="Abhishek Choubey">Abhishek Choubey</option>
+  </select>
+</div>
+
+<script>
+  const modeSelect = document.getElementById("mode");
+  const accountDiv = document.getElementById("accountDiv");
+
+  modeSelect.addEventListener("change", function() {
+    if (this.value === "Online") {
+      accountDiv.style.display = "block"; // Show account dropdown
+    } else {
+      accountDiv.style.display = "none"; // Hide account dropdown
+    }
+  });
+</script>
 
 
     <label for="remark">Remark:</label>
@@ -105,34 +129,34 @@ let lastGeneratedMessage = "";
   { name: "Anshuman Patel", mobile: "9243994181" },
   { name: "Mragendra Patel", mobile: "6261324663" },
   { name: "Vaishanavi Mehra", mobile: "7725848220" },
-  { name: "Sanjay Mirotha", mobile: "9171120130" },
+  { name: "Sanjay Mirotha", mobile: "9179120130" },
   { name: "Anand Thakur", mobile: "7047408289" },
   { name: "Ajay Baraskar", mobile: "9174870614" },
   { name: "Prateek Kant", mobile: "7770968933" },
   { name: "Vidhi Patel", mobile: "9329382695" },
   { name: "Raj Kalosiya", mobile: "9109598404" },
-  { name: "Priyanka Suryavanshi", mobile: "9165132297" },
-  { name: "Manan Panthi", mobile: "9669727432" },
+  { name: "Priya Suryavanshi", mobile: "9165132297" },
+  { name: "Aapka Manan", mobile: "9669727432" },
   { name: "Raj Kumar Meena", mobile: "8085657884" },
   { name: "Jayesh Dhakad", mobile: "7045706142" },
-  { name: "HarshWardhan", mobile: "9667598017" },
+  { name: "HarshWardhan", mobile: "8287722711" },
   { name: "Anvita Chouhan", mobile: "7987630835" },
   { name: "Vipin Patel", mobile: "9753653902" },
-  { name: "Jay Prakash Yadav", mobile: "6261476081" },
+  { name: "Jay Prakash Yadav", mobile: "8839462926" },
   { name: "Ayush Pandey", mobile: "8878050539" },
   { name: "Nitesh Ahirwar", mobile: "7489624124" },
   { name: "Aditya Mehra", mobile: "9340373010" },
   { name: "Aryan Soni", mobile: "8871522818" },
-  { name: "Himanshu Sen", mobile: "9340648420" },
+  { name: "Himanshu Sen", mobile: "9893348965" },
   { name: "Ravi Patidar", mobile: "8964006763" },
   { name: "Divi Chouhan", mobile: "9522400701" },
   { name: "Rajdeep Vishwakarma", mobile: "7770996528" },
-  { name: "Abhishek Sharma", mobile: "8770061508" },
-  { name: "Govind Rahangdale", mobile: "7909448937" },
+  { name: "Abhishek Sharma", mobile: "8770062508" },
+  { name: "Govind Pawar", mobile: "7909448937" },
   { name: "Sonu Jatav", mobile: "8103128342" },
-  { name: "Reshu Gupta", mobile: "7000332823" },
+  { name: "Rishu Gupta", mobile: "7000332823" },
   { name: "Shalini Singroli", mobile: "6232124825" },
-  { name: "Divya Yadav", mobile: "6260497674" },
+  { name: "Divya", mobile: "96260497674" },
   { name: "Priyanka Chouhan", mobile: "9179452283" },
   { name: "Krishna Patel", mobile: "8269749288" },
   { name: "Riya Rahangdale", mobile: "7999426292" },
@@ -145,20 +169,9 @@ let lastGeneratedMessage = "";
   { name: "Pooja Chakraboty", mobile: "9926125035" },
   { name: "Somesh Dhakad", mobile: "9754138691" },
   { name: "Shriram Dhakad", mobile: "6260025818" },
-  { name: "Pawan Pandit", mobile: "8871126694" },
+  { name: "Pawan Pandit", mobile: "7089542287" },
   { name: "Shriyanshu Sahu", mobile: "8982798576" },
   { name: "Vikas Pawar", mobile: "6266955434" },
-  { name: "Ananya Jain", mobile: "8226056951" },
-  { name: "Santlal Yadav", mobile: "8959290905" },
-  { name: "Vivek Thakur", mobile: "8815561566" },
-  { name: "Akshat Dubey", mobile: "6262927822" },
-  { name: "Hemant Singh Rajput", mobile: "9617064621" },
-  { name: "Sneha Sharma", mobile: "6264408704" },
-  { name: " Tanu Parmar", mobile: "8889182565" },
-  { name: "Soumy Mishra", mobile: "8349015441" },
-  { name: "Hari om Patidar", mobile: "9685220180" },
-  { name: "Jyoti Patel", mobile: "9131343094" },
-  { name: " Deepanshu Gupta", mobile: "9630671006" },
   { name: "Ashutosh Mishra", mobile: "8103572465" }
       ];
 
@@ -277,17 +290,27 @@ function hideShareButtons() {
   const fees = document.getElementById("fees").value;
   const paymentDate = document.getElementById("paymentDate").value;
   const mode = document.getElementById("mode").value;
+  const account = document.getElementById("account").value;
   const remark = document.getElementById("remark").value;
-
+  
   if (!studentName || !paymentDate) {
     alert("Student name and payment date are required.");
     return;
   }
 
   const payment = {
-    seatNumber, mobileNumber, startDate, admissionMonth,
-    dueDate, fees, paymentDate, mode, remark
-  };
+  seatNumber,
+  mobileNumber,
+  startDate,
+  admissionMonth,
+  dueDate,
+  fees,
+  paymentDate,
+  mode,
+  account,   // ✅ ADD THIS
+  remark
+};
+
 
   let allPayments = JSON.parse(localStorage.getItem("payments")) || {};
   if (!allPayments[studentName]) {
@@ -331,6 +354,7 @@ function hideShareButtons() {
       document.getElementById("fees").value = payment.fees;
       document.getElementById("paymentDate").value = payment.paymentDate;
       document.getElementById("mode").value = payment.mode;
+      document.getElementById("account").value = payment.account || "";
       document.getElementById("remark").value = payment.remark;
     }
 
@@ -484,20 +508,22 @@ table.classList.add("colorful-table"); // optional, if you want more control
       doc.setTextColor(40, 40, 40);
       doc.text(`Payment History - ${studentName}`, 14, 15);
 
-      const rows = history.map(p => [
-        p.seatNumber || "-",
-        p.mobileNumber || "-",
-        formatDate(p.startDate),
-        p.admissionMonth,
-        formatDate(p.dueDate),
-        p.fees || "-",
-        formatDate(p.paymentDate),
-        p.mode || "-",
-        p.remark || "-"
-      ]);
+     const rows = history.map(p => [
+  p.seatNumber || "-",
+  p.mobileNumber || "-",
+  formatDate(p.startDate),
+  p.admissionMonth,
+  formatDate(p.dueDate),
+  p.fees || "-",
+  formatDate(p.paymentDate),
+  p.mode || "-",
+  p.account || "-",   // ✅ Account column
+  p.remark || "-"
+]);
 
-      doc.autoTable({
-  head: [["Seat No", "Mobile", "Start Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
+
+     doc.autoTable({
+  head: [["Seat No", "Mobile", "Start Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Account", "Remark"]],
   body: rows,
   startY: 20,
   theme: 'grid',
@@ -505,10 +531,10 @@ table.classList.add("colorful-table"); // optional, if you want more control
     fillColor: [63, 81, 181],  // Dark blue
     textColor: [255, 255, 255], // White text
     fontStyle: 'bold',          // Bold header font
-    fontSize: 12                // Larger font size for header
+    fontSize: 10                // Larger font size for header
   },
   styles: {
-    fontSize: 10,               // Slightly bigger font for body
+    fontSize: 9,               // Slightly bigger font for body
     cellPadding: 4,
     fontStyle: 'bold',          // Make body font bold
     textColor: [30, 30, 30]     // Dark text color for better visibility
@@ -517,7 +543,16 @@ table.classList.add("colorful-table"); // optional, if you want more control
     fillColor: [240, 240, 240]  // Light gray background on alternate rows for readability
   },
   columnStyles: {
-    8: { cellWidth: 60 }
+    0: { cellWidth: 16 },
+    1: { cellWidth: 26 },
+    2: { cellWidth: 33 },
+    3: { cellWidth: 19, halign: "center" },
+    4: { cellWidth: 32 },
+    5: { cellWidth: 20, halign: "right" },
+    6: { cellWidth: 32 },
+    7: { cellWidth: 18 },
+    8: { cellWidth: 35 },
+    9: { cellWidth: 50 }
   }
 });
 
@@ -544,12 +579,7 @@ async function downloadAllPaymentsPDF() {
     return;
   }
 
-  const doc = new jsPDF({
-    orientation: "landscape",
-    unit: "mm",
-    format: "a4"
-  });
-
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   doc.setFontSize(16);
   doc.setTextColor(40, 40, 40);
 
@@ -557,33 +587,30 @@ async function downloadAllPaymentsPDF() {
 
   for (const studentName of studentNames) {
     const payments = allPayments[studentName];
-
     if (!payments || payments.length === 0) continue;
 
-    // Student heading
     doc.text(`Payment History - ${studentName}`, 14, currentY);
 
-    // Prepare data
     const rows = payments.map(p => [
       p.seatNumber || "-",
       p.mobileNumber || "-",
       formatDate(p.startDate),
-      p.admissionMonth,
+      p.admissionMonth || "-",
       formatDate(p.dueDate),
       p.fees || "-",
       formatDate(p.paymentDate),
       p.mode || "-",
+      p.account || "-",  // ✅ Account column
       p.remark || "-"
     ]);
 
-    // Table
-    doc.autoTable({
+   doc.autoTable({
       startY: currentY + 5,
-      head: [["Seat No", "Mobile", "Start Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Remark"]],
+      head: [["Seat No", "Mobile", "Start Date", "Month", "Due Date", "Fees", "Payment Date", "Mode", "Account", "Remark"]],
       body: rows,
       theme: 'grid',
       styles: {
-        fontSize: 10,
+        fontSize: 9,
         cellPadding: 4,
         fontStyle: 'bold',
         textColor: [30, 30, 30]
@@ -597,7 +624,7 @@ async function downloadAllPaymentsPDF() {
         fillColor: [240, 240, 240]
       },
       columnStyles: {
-        8: { cellWidth: 60 }
+        9: { cellWidth: 60 }
       },
       didDrawPage: function (data) {
         currentY = data.cursor.y + 10;
@@ -611,11 +638,11 @@ async function downloadAllPaymentsPDF() {
     });
   }
 
-  // ✅ Open PDF in new tab for manual save
   const blob = doc.output("blob");
   const url = URL.createObjectURL(blob);
   window.open(url, "_blank");
 }
+
 async function downloadMonthlyReport(month, year) {
   const allPayments = JSON.parse(localStorage.getItem("payments")) || {};
   const jsPDF = window.jsPDFGlobal;
@@ -624,64 +651,34 @@ async function downloadMonthlyReport(month, year) {
     return;
   }
 
-  const doc = new jsPDF({
-    orientation: "landscape",
-    unit: "mm",
-    format: "a4"
-  });
-
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
   const centerX = pageWidth / 2;
 
-  // 🌟 Fancy Centered Header Section
+  // Header
   const title = "Wisdom Library";
   const reportTitle = "Monthly Fees Report";
   const monthYearText = `${getMonthName(month)} ${year}`;
-  const generatedDate = new Date().toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  });
+  const generatedDate = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
 
-  // 🎨 1️⃣ Main Title
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
   doc.setTextColor(0, 102, 204);
   const titleWidth = doc.getTextWidth(title);
   doc.text(title, centerX - titleWidth / 2, 20);
-  doc.setDrawColor(0, 102, 204);
-  doc.setLineWidth(1);
-  doc.line(centerX - titleWidth / 2, 22, centerX + titleWidth / 2, 22);
 
-  // 🧾 2️⃣ Report Title
   doc.setFontSize(18);
-  doc.setTextColor(30, 30, 30);
+  doc.setTextColor(30,30,30);
   const rptWidth = doc.getTextWidth(reportTitle);
-  doc.text(reportTitle, centerX - rptWidth / 2, 32);
-  doc.setDrawColor(30, 30, 30);
-  doc.line(centerX - rptWidth / 2, 34, centerX + rptWidth / 2, 34);
+  doc.text(reportTitle, centerX - rptWidth/2, 32);
 
-  // 📅 3️⃣ Month & Year
   doc.setFontSize(16);
-  doc.setTextColor(220, 20, 60);
+  doc.setTextColor(220,20,60);
   doc.setFont("helvetica", "bold");
   const myWidth = doc.getTextWidth(monthYearText);
-  doc.text(monthYearText, centerX - myWidth / 2, 44);
-  doc.setDrawColor(220, 20, 60);
-  doc.line(centerX - myWidth / 2, 46, centerX + myWidth / 2, 46);
+  doc.text(monthYearText, centerX - myWidth/2, 44);
 
-  // 🕓 Generated Date (bottom-right corner)
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "italic");
-  doc.setTextColor(100, 100, 100);
-  const genText = `Generated on: ${generatedDate}`;
-  const genWidth = doc.getTextWidth(genText);
-  const pageHeight = doc.internal.pageSize.getHeight();
-  doc.text(genText, pageWidth - genWidth - 14, pageHeight - 10);
-
-  // --------------------------
-  // Table Data Section
-  // --------------------------
+  // Table
   const rows = [];
   let total = 0;
 
@@ -693,10 +690,11 @@ async function downloadMonthlyReport(month, year) {
         rows.push([
           studentName,
           p.mobileNumber || "-",
-          formatDate(p.paymentDate),
-          p.admissionMonth || "-", // ✅ New column for Month
           p.fees || "0",
+          p.admissionMonth || "-",
+          formatDate(p.paymentDate),
           p.mode || "-",
+          p.account || "-",  // ✅ Account column
           p.remark || "-"
         ]);
         total += Number(p.fees) || 0;
@@ -709,58 +707,77 @@ async function downloadMonthlyReport(month, year) {
     return;
   }
 
-  // ✅ Table with "Month" column
   doc.autoTable({
-    startY: 55,
-    head: [["Student Name", "Mobile", "Payment Date", "Month", "Fees", "Mode", "Remark"]],
-    body: rows,
-    theme: "grid",
-    headStyles: {
-      fillColor: [0, 102, 204],
-      textColor: [255, 255, 255],
-      fontStyle: "bold"
-    },
-    bodyStyles: {
-      fontStyle: "bold",
-      textColor: [0, 0, 0],
-      fillColor: false,
-    },
-    styles: {
-      fontSize: 10,
-      cellPadding: 4,
-      lineColor: [180, 180, 180],
-      lineWidth: 0.2
-    },
-columnStyles: {
-  3: { halign: "center" } // 0=Student, 1=Mobile, 2=Payment Date, 3=Month
-},
+  startY: 55,
+  tableWidth: "auto",   // ✅ auto fit table
+  head: [[
+    "Student Name",
+    "Mobile",
+    "Fees",
+    "Month",
+    "Payment Date",
+    "Mode",
+    "Account",
+    "Remark"
+  ]],
+  body: rows,
+  theme: "grid",
 
-    didDrawPage: function (data) {
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const pageWidth = doc.internal.pageSize.getWidth();
+  styles: {
+    font: "helvetica",
+    fontSize: 9,          // readable & compact
+    cellPadding: 3,
+    valign: "middle",
+    overflow: "linebreak", // ✅ wrap text
+    cellWidth: "wrap"      // ✅ auto column width
+  },
 
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "italic");
-      doc.setTextColor(100, 100, 100);
+  headStyles: {
+    fillColor: [0, 102, 204],
+    textColor: [255, 255, 255],
+    fontStyle: "bold",
+    fontSize: 10,
+    halign: "center"
+  },
 
-      const genText = `Generated on: ${generatedDate}`;
-      const genWidth = doc.getTextWidth(genText);
-      doc.text(genText, pageWidth - genWidth - 14, pageHeight - 10);
-    }
-  });
+  bodyStyles: {
+    fontStyle: "bold",
+    textColor: [0, 0, 0]
+  },
 
-  // ✅ Total at bottom
+  columnStyles: {
+    2: { halign: "right" },   // Fees
+    3: { halign: "center" },  // Month
+    5: { halign: "center" },  // Mode
+    6: { halign: "center" }   // Account
+    // ❌ koi fixed width nahi
+  },
+
+  didDrawPage: function () {
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const genText = `Generated on: ${generatedDate}`;
+    const genWidth = doc.getTextWidth(genText);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(100, 100, 100);
+    doc.text(genText, pageWidth - genWidth - 14, pageHeight - 10);
+  }
+});
+
+
   const finalY = doc.lastAutoTable.finalY + 10;
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 100, 0);
+  doc.setTextColor(0,100,0);
   doc.text(`Total Fees Received: ${total.toLocaleString()}`, 14, finalY);
 
-   // ✅ Open PDF in new tab
   const blob = doc.output("blob");
   const url = URL.createObjectURL(blob);
   window.open(url, "_blank");
 }
+
 
 
 // Helper
@@ -797,51 +814,32 @@ function openMonthPicker() {
 
 
 async function backupData() {
-
-  // Save only payments
-  const payments = JSON.parse(localStorage.getItem("payments") || "[]");
-  const dataStr = JSON.stringify(payments, null, 2);
-
-  // 1. Android App (WebView)
-  if (typeof AndroidBridge !== "undefined" && AndroidBridge.backup) {
-    AndroidBridge.backup(dataStr);
-    return;
-  }
-
-  // 2. Desktop Browser (Save As dialog)
-  if ('showSaveFilePicker' in window) {
-    const options = {
-      types: [{
-        description: 'JSON Files',
-        accept: { 'application/json': ['.json'] },
-      }],
-      suggestedName: 'payments-backup.json'
-    };
-
-    try {
-      const handle = await window.showSaveFilePicker(options);
-      const writable = await handle.createWritable();
-      await writable.write(dataStr);
-      await writable.close();
+  try {
+    const allPayments = localStorage.getItem("payments");
+    if (!allPayments) {
+      alert("No data to backup.");
       return;
-    } catch (err) {
-      console.error('File save cancelled or failed', err);
+    }
+
+    const fileHandle = await window.showSaveFilePicker({
+      suggestedName: "student_payments_backup.json",
+      types: [{
+        description: "JSON File",
+        accept: { "application/json": [".json"] }
+      }]
+    });
+
+    const writable = await fileHandle.createWritable();
+    await writable.write(allPayments);
+    await writable.close();
+
+    alert("✅ Backup saved successfully!");
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      alert("❌ Failed to save file.");
+      console.error(err);
     }
   }
-
-  // 3. Mobile fallback download
-  const blob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'payments-backup.json';
-
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 async function restoreData() {
@@ -921,9 +919,3 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 </body>
 </html>
-
-
-
-
-
-
