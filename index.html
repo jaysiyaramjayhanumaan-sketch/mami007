@@ -239,22 +239,33 @@ let lastGeneratedMessage = "";
       document.getElementById("dueDate").value = `${year}-${month}-${day}`;
     }
 function generateMessage(name, mobile, fees, months, paymentDate, startDate, dueDate, mode, remark) {
-  return `📚 **WISDOM LIBRARY**
+  return 📚✨ **WISDOM LIBRARY** ✨📚  
+────────────────────────  
+🧾 **FEE RECEIPT**  
+────────────────────────  
 
-Hello **${name}** 👋😄✨  
+Hello **${name}** 👋😊  
 
-📩✨ **Payment Received Successfully**  
-We are delighted to inform you that **your payment of ₹${fees} for ${months} month(s) has been successfully received on ${paymentDate}.** ✅ 🎯✨  
+📩 **Payment Received Successfully** ✅  
 
-🗓️🗓️**Subscription Period:** ${startDate} ➡️ ${dueDate} ⏳  
-💳💵 **Mode of Payment:** ${mode} ✨  
-${remark ? `📝✍️ **Remark:** ${remark} 💬` : ''}
+We are pleased to inform you that **your payment details are as follows:**  
 
-🙏💖🌟 Thank you for your **timely payment and continued trust in Wisdom Library.**
-📘 We remain committed to supporting your learning journey.  
-📚✨🚀 Keep learning, keep growing, and keep shining! 🌈🌟😊`;
-}
+💰 **Amount Paid:** ₹${fees}  
+📆 **Duration:** ${months} Month(s)  
+🗓️ **Payment Date:** ${paymentDate}  
+💳 **Mode of Payment:** ${mode}  
 
+📅 **Subscription Period**  
+➡️ **From:** ${startDate}  
+➡️ **To:** ${dueDate}  
+
+${remark ? `📝 **Remark:** ${remark}` : ''}
+
+────────────────────────  
+🙏 **Thank you for your timely payment and continued trust in Wisdom Library.**  
+
+📘 We are always here to support your learning journey.  
+📚✨ **Keep learning, keep growing, and keep shining!** 🌟🚀😊
 
 
 
@@ -934,6 +945,7 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 </body>
 </html>
+
 
 
 
